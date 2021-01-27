@@ -1,7 +1,9 @@
 import { createApp } from 'vue';
 import App from './App.vue';
-import { startWebSocketConnection } from './lightingConnection';
+import * as lightingConnection from './lightingConnection';
+import * as deviceConnection from './devicesConnection';
 
-startWebSocketConnection();
+lightingConnection.startWebSocketConnection();
+deviceConnection.startWebSocketConnection();
 
 createApp(App).mount('#app');

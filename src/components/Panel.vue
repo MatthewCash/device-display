@@ -1,6 +1,6 @@
 <template>
     <div class="grid-container">
-        <div class="grid-item devices">Devices</div>
+        <div class="grid-item devices"><Info /></div>
         <div class="grid-item basic"><Lighting /></div>
         <div class="grid-item effects"><Effects /></div>
     </div>
@@ -8,14 +8,16 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Effects from './Effects.vue';
+import Info from './Info.vue';
 import Lighting from './Lighting.vue';
+import Effects from './Effects.vue';
 
 export default defineComponent({
     name: 'Panel',
     components: {
-        Effects,
-        Lighting
+        Info,
+        Lighting,
+        Effects
     }
 });
 </script>

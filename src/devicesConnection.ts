@@ -1,12 +1,12 @@
-import { loadEffects } from './effects';
+import { loadDevices, updateDevice } from './devices';
 import { setStatus } from './status';
 
 let ws: WebSocket;
 
 const connect = () => {
-    console.log('Connecting to Lighting WS Server...');
+    console.log('Devices Connecting to WS Server...');
     if (ws) ws.close();
-    ws = new WebSocket(import.meta.env.VITE_LIGHTING_WS_URL as string);
+    ws = new WebSocket(import.meta.env.VITE_DEVICES_WS_URL as string);
 
     ws.addEventListener('open', onConnect);
     ws.addEventListener('message', onMessage);
@@ -15,7 +15,7 @@ const connect = () => {
 };
 
 const onConnect = () => {
-    console.log('Lighting WebSocket Connected!');
+    console.log('Devices WebSocket Connected!');
 };
 
 const onMessage = (message: MessageEvent) => {
@@ -25,11 +25,12 @@ const onMessage = (message: MessageEvent) => {
     } catch {
         return ws.send('Invalid JSON!');
     }
-    if (data.effects) {
-        loadEffects(data.effects);
+
+    if (data.devices) {
+        loadDevices(data.devices);
     }
-    if (data.status) {
-        setStatus(data.status);
+    if (data.deviceUpdate) {
+        updateDevice(data.deviceUpdate.id, data.deviceUpdate.status);
     }
 };
 const onError = (error: Event) => {
@@ -37,7 +38,7 @@ const onError = (error: Event) => {
 };
 
 const onClose = () => {
-    console.log('Lighting WebSocket Disconnected!');
+    console.log('Devices WebSocket Disconnected!');
 };
 
 export const startWebSocketConnection = () => {
