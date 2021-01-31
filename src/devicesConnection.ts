@@ -1,5 +1,4 @@
 import { loadDevices, updateDevice } from './devices';
-import { setStatus } from './status';
 
 let ws: WebSocket;
 

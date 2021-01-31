@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { defineComponent } from 'vue';
 import { LightingEffect, lightingEffects, reloadEffects } from '../effects';
 import { status } from '../status';
 import { sendMessage } from '../lightingConnection';
