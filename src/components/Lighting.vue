@@ -2,7 +2,12 @@
     <div class="lighting">
         <h1 class="lighting-title">Lighting</h1>
         <hr class="lighting-separator" />
-        <div class="color-wheel" @click="onColorWheelClick">
+        <div
+            class="color-wheel"
+            @click="onColorWheelUpdate"
+            @mousemove="onColorWheelUpdate"
+            @touchmove="onColorWheelUpdate"
+        >
             <div
                 class="color-indicator"
                 :style="{
@@ -74,9 +79,27 @@ export default defineComponent({
 
             return { hue, saturation };
         },
-        onColorWheelClick(event: any) {
-            const x = event.layerX - 100;
-            const y = -event.layerY + 100;
+        onColorWheelUpdate(event: MouseEvent | TouchEvent) {
+            let x: number = 0;
+            let y: number = 0;
+
+            if (event.type === 'click') {
+                console.log('click');
+                event = event as MouseEvent;
+                x = event.offsetX - 100;
+                y = -event.offsetY + 100;
+            }
+
+            if (event.type === 'touchmove') {
+                event = event as TouchEvent;
+
+                const targetDims = (event.target as HTMLElement).getBoundingClientRect();
+
+                x = event.targetTouches[0].clientX - targetDims.x - 100;
+                y = -event.targetTouches[0].clientY + targetDims.y + 100;
+            }
+
+            if (!x || !y) return;
 
             const { hue, saturation } = this.getHueSaturation(x, y);
 
@@ -121,7 +144,7 @@ export default defineComponent({
     position: absolute;
     transform: translate(-10px, -10px);
 }
-.hidden {
+.color-indicator.hidden {
     background-color: transparent;
 }
 </style>
