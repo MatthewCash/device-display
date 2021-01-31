@@ -76,26 +76,29 @@ export default defineComponent({
             return { hue, saturation };
         },
         onColorWheelUpdate(event: MouseEvent | TouchEvent) {
-            let x: number = 0;
-            let y: number = 0;
+            let clientX: number = 0;
+            let clientY: number = 0;
 
             if (event.type === 'click') {
-                console.log('click');
                 event = event as MouseEvent;
-                x = event.offsetX - 100;
-                y = -event.offsetY + 100;
+
+                clientX = event.clientX;
+                clientY = event.clientY;
             }
 
             if (event.type === 'touchmove') {
                 event = event as TouchEvent;
 
-                const targetDims = (event.target as HTMLElement).getBoundingClientRect();
-
-                x = event.targetTouches[0].clientX - targetDims.x - 100;
-                y = -event.targetTouches[0].clientY + targetDims.y + 100;
+                clientX = event.targetTouches[0].clientX;
+                clientY = event.targetTouches[0].clientY;
             }
 
-            if (!x || !y) return;
+            if (!clientX || !clientY) return;
+
+            const targetDims = (event.currentTarget as HTMLElement).getBoundingClientRect();
+
+            const x = clientX - targetDims.x - 100;
+            const y = -clientY + targetDims.y + 100;
 
             const { hue, saturation } = this.getHueSaturation(x, y);
 
