@@ -1,90 +1,127 @@
 <template>
-    <div class="basic">
-        <h1 class="basic-title">Lighting</h1>
-        <hr class="basic-separator" />
-        <!-- <div
-            class="effect-container"
-            v-for="effect of lightingEffects"
-            :key="effect.id"
-            @click="toggleEffect(effect)"
-        >
+    <div class="lighting">
+        <h1 class="lighting-title">Lighting</h1>
+        <hr class="lighting-separator" />
+        <div class="color-wheel" @click="onColorWheelClick">
             <div
-                class="effect-status"
-                :class="{ 'effect-enabled': effectIsEnabled(effect) }"
-            >
-                {{ effectIsEnabled(effect) ? 'Enabled' : 'Disabled' }}
-            </div>
-            <div class="effect-info">
-                <span class="effect-name">{{ effect.name }}</span>
-            </div>
-        </div> -->
+                class="color-indicator"
+                :style="{
+                    top: colorY + 'px',
+                    left: colorX + 'px'
+                }"
+                :class="{ hidden: !shouldShowIndicator }"
+            ></div>
+        </div>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { computed, defineComponent } from 'vue';
+import { sendMessage } from '../lightingConnection';
 import { status } from '../status';
+
+interface HueSaturation {
+    hue: number;
+    saturation: number;
+}
 
 export default defineComponent({
     name: 'Lighting',
     setup: () => {
-        return {};
+        const colorX = computed(() => {
+            const saturation = Math.floor(
+                ((status.saturation ?? 0) / 100) ** 2 * 100
+            );
+
+            const x =
+                Math.sin(((status.hue ?? 0) / 180) * Math.PI) *
+                    (saturation ?? 0) +
+                100;
+
+            return x;
+        });
+
+        const colorY = computed(() => {
+            const saturation = Math.floor(
+                ((status.saturation ?? 0) / 100) ** 2 * 100
+            );
+
+            const y =
+                100 -
+                Math.cos(((status.hue ?? 0) / 180) * Math.PI) *
+                    (saturation ?? 0);
+
+            return y;
+        });
+
+        const shouldShowIndicator = computed(() => {
+            if (status.effect) return false;
+            if (status.saturation == null) return false;
+            if (status.hue == null) return false;
+
+            return true;
+        });
+
+        return { colorX, colorY, shouldShowIndicator };
     },
-    methods: {}
+    methods: {
+        getHueSaturation(x: number, y: number): HueSaturation {
+            let hue = 90 - Math.trunc((Math.atan2(y, x) * 180) / Math.PI);
+            if (hue < 0) hue += 360;
+
+            let saturation = Math.abs(Math.sqrt(x ** 2 + y ** 2));
+            saturation = Math.floor(Math.sqrt(saturation / 100) * 100);
+
+            return { hue, saturation };
+        },
+        onColorWheelClick(event: any) {
+            const x = event.layerX - 100;
+            const y = -event.layerY + 100;
+
+            const { hue, saturation } = this.getHueSaturation(x, y);
+
+            sendMessage({
+                setHueSaturation: { hue, saturation }
+            });
+        }
+    }
 });
 </script>
 
 <style lang="scss" scoped>
-.basic {
+.lighting {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     margin: 10px 20px;
 }
-.basic-title {
+.lighting-title {
     font-family: monospace;
     margin-bottom: 0;
     font-size: 2.4rem;
 }
-.basic-separator {
+.lighting-separator {
     width: 80%;
     margin: 10px 0 30px;
 }
-// .effect-container {
-//     display: grid;
-//     grid-template-columns: 30% 70%;
-//     width: 100%;
-//     text-align: center;
-//     background-color: rgb(68, 68, 68);
-//     border-radius: 6px;
-//     margin-bottom: 15px;
-// }
-// .effect-container > div {
-//     width: 100%;
-//     padding: 20px 0;
-// }
-// .effect-status {
-//     background-color: rgb(109, 109, 109);
-//     border-radius: 6px 0px 0px 6px;
-// }
-// .effect-enabled {
-//     background-color: rgb(150, 150, 150);
-//     animation: 1s infinite effect-enabled;
-// }
-// @keyframes effect-enabled {
-//     0% {
-//         transform: translateX(0px);
-//     }
-//     50% {
-//         transform: translateX(6px);
-//     }
-//     100% {
-//         transform: translateX(0px);
-//     }
-// }
-// .effect-info {
-//     font-family: monospace;
-//     font-size: 1.3rem;
-// }
+.color-wheel {
+    background: radial-gradient(white, transparent 60%),
+        conic-gradient(red, yellow, lime, aqua, blue, magenta, red);
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    position: relative;
+}
+.color-indicator {
+    border-radius: 50%;
+    background-color: white;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    transform: translate(-10px, -10px);
+}
+.hidden {
+    background-color: transparent;
+}
 </style>
