@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Panel from './components/Panel.vue';
+import Panel from './Panel.vue';
 
 export default defineComponent({
     name: 'App',

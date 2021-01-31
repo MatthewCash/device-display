@@ -8,9 +8,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Info from './Info.vue';
-import Lighting from './Lighting.vue';
-import Effects from './Effects.vue';
+import Info from './sections/Info.vue';
+import Lighting from './sections/Lighting.vue';
+import Effects from './sections/Effects.vue';
 
 export default defineComponent({
     name: 'Panel',
