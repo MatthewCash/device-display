@@ -55,13 +55,7 @@ export default defineComponent({
             return y;
         });
 
-        const shouldShowIndicator = computed(() => {
-            if (status.effect) return false;
-            if (status.saturation == null) return false;
-            if (status.hue == null) return false;
-
-            return true;
-        });
+        const shouldShowIndicator = computed(() => status.mode === 'color');
 
         return { colorX, colorY, shouldShowIndicator };
     },
@@ -81,6 +75,14 @@ export default defineComponent({
 
             if (event.type === 'click') {
                 event = event as MouseEvent;
+                clientX = event.clientX;
+
+                clientY = event.clientY;
+            }
+
+            if (event.type === 'mousemove') {
+                event = event as MouseEvent;
+                if (!event.buttons) return;
 
                 clientX = event.clientX;
                 clientY = event.clientY;

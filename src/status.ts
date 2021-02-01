@@ -8,6 +8,7 @@ export interface LightingStatus {
     brightness: number;
     colorTemp?: number;
     power: boolean;
+    mode: 'color' | 'white' | 'effect';
 }
 
 export const status: LightingStatus = reactive({
@@ -16,7 +17,8 @@ export const status: LightingStatus = reactive({
     saturation: 100,
     brightness: 100,
     colorTemp: 0,
-    power: true
+    power: true,
+    mode: 'white'
 });
 
 export const setStatus = (wsStatus: any) => {
@@ -27,4 +29,5 @@ export const setStatus = (wsStatus: any) => {
     status.brightness = wsStatus.brightness;
     status.colorTemp = wsStatus.colorTemp;
     status.power = wsStatus.power;
+    status.mode = wsStatus.mode;
 };
