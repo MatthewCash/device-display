@@ -12,7 +12,7 @@
                 class="device-status"
                 :class="{ 'device-enabled': device.online }"
             >
-                {{ device.online ? 'Enabled' : 'Disabled' }}
+                {{ device.online ? 'On' : 'Off' }}
             </div>
             <div class="device-info">
                 <span class="device-name">{{ device.name }}</span>
