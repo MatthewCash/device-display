@@ -81,7 +81,7 @@ export default defineComponent({
     padding: 25px 0;
 }
 .effect-status {
-    background-color: rgb(109, 109, 109);
+    background-color: rgb(88, 88, 88);
     border-radius: 6px 0px 0px 6px;
     font-size: 1.2rem;
 }
