@@ -69,7 +69,7 @@ export default defineComponent({
 }
 .effect-container {
     display: grid;
-    grid-template-columns: 30% 70%;
+    grid-template-columns: 40% 60%;
     width: 100%;
     text-align: center;
     background-color: rgb(68, 68, 68);
@@ -78,11 +78,12 @@ export default defineComponent({
 }
 .effect-container > div {
     width: 100%;
-    padding: 20px 0;
+    padding: 25px 0;
 }
 .effect-status {
     background-color: rgb(109, 109, 109);
     border-radius: 6px 0px 0px 6px;
+    font-size: 1.2rem;
 }
 .effect-enabled {
     background-color: rgb(150, 150, 150);

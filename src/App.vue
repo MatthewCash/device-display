@@ -15,6 +15,9 @@ export default defineComponent({
 </script>
 
 <style>
+html {
+    font-size: 20px;
+}
 body {
     margin: 0;
     overscroll-behavior: none;

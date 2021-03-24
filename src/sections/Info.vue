@@ -61,7 +61,7 @@ export default defineComponent({
 }
 .device-container {
     display: grid;
-    grid-template-columns: 30% 70%;
+    grid-template-columns: 25% 75%;
     width: 100%;
     text-align: center;
     background-color: rgb(68, 68, 68);
@@ -70,11 +70,12 @@ export default defineComponent({
 }
 .device-container > div {
     width: 100%;
-    padding: 20px 0;
+    padding: 25px 0;
 }
 .device-status {
     background-color: rgb(109, 109, 109);
     border-radius: 6px 0px 0px 6px;
+    font-size: 1.2rem;
 }
 .device-enabled {
     background-color: rgb(150, 150, 150);
