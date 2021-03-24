@@ -8,8 +8,8 @@
         <div
             class="color-indicator"
             :style="{
-                top: colorY + 'px',
-                left: colorX + 'px'
+                top: colorY + '%',
+                left: colorX + '%'
             }"
             :class="{ hidden: !shouldShowIndicator }"
         ></div>
@@ -35,9 +35,10 @@ export default defineComponent({
             );
 
             const x =
-                Math.sin(((status.hue ?? 0) / 180) * Math.PI) *
+                (Math.sin(((status.hue ?? 0) / 180) * Math.PI) *
                     (saturation ?? 0) +
-                100;
+                    100) /
+                2;
 
             return x;
         });
@@ -48,9 +49,10 @@ export default defineComponent({
             );
 
             const y =
-                100 -
-                Math.cos(((status.hue ?? 0) / 180) * Math.PI) *
-                    (saturation ?? 0);
+                50 -
+                (Math.cos(((status.hue ?? 0) / 180) * Math.PI) *
+                    (saturation ?? 0)) /
+                    2;
 
             return y;
         });
@@ -60,18 +62,18 @@ export default defineComponent({
         return { colorX, colorY, shouldShowIndicator };
     },
     methods: {
-        getHueSaturation(x: number, y: number): HueSaturation {
+        getHueSaturation(radius: number, x: number, y: number): HueSaturation {
             let hue = 90 - Math.trunc((Math.atan2(y, x) * 180) / Math.PI);
             if (hue < 0) hue += 360;
 
             let saturation = Math.abs(Math.sqrt(x ** 2 + y ** 2));
-            saturation = Math.floor(Math.sqrt(saturation / 100) * 100);
+            saturation = Math.floor(Math.sqrt(saturation / radius) * 100);
 
             return { hue, saturation };
         },
         onColorWheelUpdate(event: MouseEvent | TouchEvent) {
-            let clientX: number = 0;
-            let clientY: number = 0;
+            let clientX = 0;
+            let clientY = 0;
 
             if (event.type === 'click') {
                 event = event as MouseEvent;
@@ -99,10 +101,15 @@ export default defineComponent({
 
             const targetDims = (event.currentTarget as HTMLElement).getBoundingClientRect();
 
-            const x = clientX - targetDims.x - 100;
-            const y = -clientY + targetDims.y + 100;
+            const { width, height } = targetDims;
 
-            const { hue, saturation } = this.getHueSaturation(x, y);
+            const x = clientX - targetDims.x - width / 2;
+            const y = -clientY + targetDims.y + height / 2;
+
+            if (Math.abs(x) > height / 2) return;
+            if (Math.abs(y) > height / 2) return;
+
+            const { hue, saturation } = this.getHueSaturation(height / 2, x, y);
 
             sendMessage({
                 setHueSaturation: { hue, saturation }
@@ -116,18 +123,19 @@ export default defineComponent({
 .color-wheel {
     background: radial-gradient(white, transparent 60%),
         conic-gradient(red, yellow, lime, aqua, blue, magenta, red);
-    width: 200px;
-    height: 200px;
+    width: 300px;
+    height: 300px;
     border-radius: 50%;
     position: relative;
 }
 .color-indicator {
     border-radius: 50%;
     background-color: white;
-    width: 20px;
-    height: 20px;
+    border: 1px solid rgb(133, 133, 133);
+    width: 10%;
+    height: 10%;
     position: absolute;
-    transform: translate(-10px, -10px);
+    transform: translate(-50%, -50%);
 }
 .color-indicator.hidden {
     background-color: transparent;
