@@ -139,5 +139,6 @@ export default defineComponent({
 }
 .color-indicator.hidden {
     background-color: transparent;
+    border: none;
 }
 </style>
