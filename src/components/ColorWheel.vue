@@ -30,6 +30,7 @@ export default defineComponent({
     name: 'ColorWheel',
     setup: () => {
         const colorX = computed(() => {
+            if (status.mode !== 'color') return;
             const saturation = Math.floor(
                 ((status.saturation ?? 0) / 100) ** 2 * 100
             );
@@ -44,6 +45,7 @@ export default defineComponent({
         });
 
         const colorY = computed(() => {
+            if (status.mode !== 'color') return;
             const saturation = Math.floor(
                 ((status.saturation ?? 0) / 100) ** 2 * 100
             );
