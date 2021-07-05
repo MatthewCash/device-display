@@ -14,7 +14,7 @@
         >
             <div
                 class="device-status"
-                :class="{ 'devices-enabled': device.status }"
+                :class="{ 'device-enabled': device.status }"
             >
                 {{ device.status ? 'On' : 'Off' }}
             </div>
