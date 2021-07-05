@@ -2,7 +2,9 @@
     <div class="devices">
         <h1 class="devices-title">Devices</h1>
         <hr class="devices-separator" />
-        <h2 class="disconnected">Disconnected from Device Controller</h2>
+        <h2 v-if="!connected" class="disconnected">
+            Disconnected from Device Controller
+        </h2>
         <h3 v-if="devices.length === 0">No Devices Detected</h3>
         <div
             class="device-container"
@@ -26,6 +28,7 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue';
 import { Device, devices, setDevice } from '../devices';
+import { connected } from '../devicesConnection';
 
 export default defineComponent({
     name: 'devices',
@@ -34,7 +37,7 @@ export default defineComponent({
             devices.sort((a, b) => a.name.localeCompare(b.name))
         );
 
-        return { devices: sortedDevices };
+        return { devices: sortedDevices, connected };
     },
     methods: {
         toggleDevice(device: Device) {
@@ -44,7 +47,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .devices {
     display: flex;
     flex-direction: column;

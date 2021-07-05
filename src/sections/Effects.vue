@@ -2,7 +2,6 @@
     <div class="effects">
         <h1 class="effects-title" @click="reloadEffects()">Effects</h1>
         <hr class="effects-separator" />
-        {{ connected }}
         <h2 v-if="!connected" class="disconnected">
             Disconnected from Lighting Controller
         </h2>
@@ -27,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { defineComponent } from 'vue';
 import { LightingEffect, lightingEffects, reloadEffects } from '../effects';
 import { status } from '../status';
 import { sendMessage, connected } from '../lightingConnection';
