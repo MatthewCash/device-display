@@ -1,24 +1,24 @@
 <template>
     <div class="grid-container">
-        <div class="grid-item devices"><Info /></div>
+        <div class="grid-item devices"><Devices /></div>
         <div class="grid-item basic"><Lighting /></div>
         <div class="grid-item effects"><Effects /></div>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import Info from './sections/Info.vue';
-import Lighting from './sections/Lighting.vue';
-import Effects from './sections/Effects.vue';
+import { defineComponent } from "vue";
+import Devices from "./sections/Devices.vue";
+import Lighting from "./sections/Lighting.vue";
+import Effects from "./sections/Effects.vue";
 
 export default defineComponent({
-    name: 'Panel',
+    name: "Panel",
     components: {
-        Info,
+        Devices,
         Lighting,
-        Effects
-    }
+        Effects,
+    },
 });
 </script>
 

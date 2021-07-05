@@ -1,7 +1,7 @@
 <template>
-    <div class="info">
-        <h1 class="info-title">Info</h1>
-        <hr class="info-separator" />
+    <div class="devices">
+        <h1 class="devices-title">Devices</h1>
+        <hr class="devices-separator" />
         <div
             class="device-container"
             v-for="device of devices"
@@ -10,9 +10,9 @@
         >
             <div
                 class="device-status"
-                :class="{ 'device-enabled': device.online }"
+                :class="{ 'device-enabled': device.status }"
             >
-                {{ device.online ? 'On' : 'Off' }}
+                {{ device.status ? "On" : "Off" }}
             </div>
             <div class="device-info">
                 <span class="device-name">{{ device.name }}</span>
@@ -22,11 +22,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
-import { Device, devices, setDevice } from '../devices';
+import { defineComponent, computed } from "vue";
+import { Device, devices, setDevice } from "../devices";
 
 export default defineComponent({
-    name: 'Info',
+    name: "devices",
     setup: () => {
         const sortedDevices = computed(() =>
             devices.sort((a, b) => a.name.localeCompare(b.name))
@@ -36,26 +36,26 @@ export default defineComponent({
     },
     methods: {
         toggleDevice(device: Device) {
-            setDevice(device.id, !device.online);
-        }
-    }
+            setDevice(device.id, !device.status);
+        },
+    },
 });
 </script>
 
 <style lang="scss" scoped>
-.info {
+.devices {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     margin: 10px 20px;
 }
-.info-title {
+.devices-title {
     font-family: monospace;
     margin-bottom: 0;
     font-size: 2.4rem;
 }
-.info-separator {
+.devices-separator {
     width: 80%;
     margin: 10px 0 30px;
 }

@@ -1,4 +1,5 @@
-import { loadDevices, updateDevice } from './devices';
+import {  loadDevices, StatusUpdate, updateDevice } from './devices';
+
 
 let ws: WebSocket;
 
@@ -25,11 +26,13 @@ const onMessage = (message: MessageEvent) => {
         return ws.send('Invalid JSON!');
     }
 
-    if (data.devices) {
-        loadDevices(data.devices);
+    if (data['deviceList']) {
+        loadDevices(data['deviceList']);
     }
-    if (data.deviceUpdate) {
-        updateDevice(data.deviceUpdate.id, data.deviceUpdate.status);
+    if (data['deviceUpdate']) {
+        const update = data['deviceUpdate'] as StatusUpdate;
+
+        updateDevice(update.id, update.status)
     }
 };
 const onError = (error: Event) => {
