@@ -2,10 +2,18 @@ import { reactive } from 'vue';
 import { sendMessage } from '././devicesConnection';
 
 export interface Device {
-    id: string;
-    online: boolean;
     name: string;
+    id: string;
+    status: boolean;
 }
+export interface StatusUpdate {
+    name: Device['name'];
+    id: Device['id'];
+    status: Device['status'];
+    updated?: boolean;
+}
+
+
 
 export const devices: Device[] = reactive([]);
 
@@ -18,13 +26,18 @@ export const updateDevice = (deviceId: string, status: boolean) => {
     const device = devices.find(device => device.id === deviceId);
     if (!device) return;
 
-    device.online = !!status;
+    device.status = !!status;
 };
 
 export const setDevice = (deviceId: string, status: boolean) => {
+    const update: StatusUpdate = {
+        name: devices.find(device => device.id === deviceId)!.name,
+        id: deviceId,
+        status
+    }
+
+
     sendMessage({
-        devices: {
-            [deviceId]: status
-        }
+        incomingDeviceUpdate: update
     });
 };
