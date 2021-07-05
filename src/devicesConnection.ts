@@ -1,5 +1,4 @@
-import {  loadDevices, StatusUpdate, updateDevice } from './devices';
-
+import { loadDevices, DeviceUpdate, updateDevice } from './devices';
 
 let ws: WebSocket;
 
@@ -32,9 +31,9 @@ const onMessage = (message: MessageEvent) => {
         loadDevices(data['deviceList']);
     }
     if (data['deviceUpdate']) {
-        const update = data['deviceUpdate'] as StatusUpdate;
+        const update = data['deviceUpdate'] as DeviceUpdate;
 
-        updateDevice(update.id, update.status)
+        updateDevice(update.id, update.status);
     }
 };
 

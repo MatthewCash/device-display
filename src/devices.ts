@@ -6,14 +6,18 @@ export interface Device {
     id: string;
     status: boolean;
 }
-export interface StatusUpdate {
+export interface DeviceUpdate {
     name: Device['name'];
     id: Device['id'];
     status: Device['status'];
-    updated?: boolean;
+    updated: boolean;
 }
 
-
+export interface DeviceUpdateRequest {
+    name: Device['name'];
+    id: Device['id'];
+    status: Device['status'];
+}
 
 export const devices: Device[] = reactive([]);
 
@@ -30,14 +34,11 @@ export const updateDevice = (deviceId: string, status: boolean) => {
 };
 
 export const setDevice = (deviceId: string, status: boolean) => {
-    const update: StatusUpdate = {
+    const deviceUpdateRequest: DeviceUpdateRequest = {
         name: devices.find(device => device.id === deviceId)!.name,
         id: deviceId,
         status
-    }
+    };
 
-
-    sendMessage({
-        incomingDeviceUpdate: update
-    });
+    sendMessage({ deviceUpdateRequest });
 };
