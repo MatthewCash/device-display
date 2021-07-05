@@ -2,6 +2,8 @@ import { loadDevices, updateDevice } from './devices';
 
 let ws: WebSocket;
 
+export const connected = () => ws.readyState === 0;
+
 const connect = () => {
     console.log('Devices Connecting to WS Server...');
     if (ws) ws.close();
@@ -32,6 +34,7 @@ const onMessage = (message: MessageEvent) => {
         updateDevice(data.deviceUpdate.id, data.deviceUpdate.status);
     }
 };
+
 const onError = (error: Event) => {
     console.warn(error);
 };

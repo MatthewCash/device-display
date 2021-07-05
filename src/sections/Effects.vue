@@ -2,6 +2,11 @@
     <div class="effects">
         <h1 class="effects-title" @click="reloadEffects()">Effects</h1>
         <hr class="effects-separator" />
+        {{ connected }}
+        <h2 v-if="!connected" class="disconnected">
+            Disconnected from Lighting Controller
+        </h2>
+        <h3 v-if="lightingEffects.length === 0">No Effects Configured</h3>
         <div
             class="effect-container"
             v-for="effect of lightingEffects"
@@ -22,15 +27,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { LightingEffect, lightingEffects, reloadEffects } from '../effects';
 import { status } from '../status';
-import { sendMessage } from '../lightingConnection';
+import { sendMessage, connected } from '../lightingConnection';
 
 export default defineComponent({
     name: 'Effects',
     setup: () => {
-        return { lightingEffects, status };
+        return { lightingEffects, status, connected };
     },
     methods: {
         effectIsEnabled(effect: LightingEffect) {
@@ -103,5 +108,9 @@ export default defineComponent({
 .effect-info {
     font-family: monospace;
     font-size: 1.3rem;
+}
+.disconnected {
+    color: red;
+    animation: pulse 2s infinite;
 }
 </style>

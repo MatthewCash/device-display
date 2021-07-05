@@ -1,12 +1,20 @@
+import { ref, Ref, computed } from 'vue';
 import { loadEffects } from './effects';
 import { setStatus } from './status';
 
 let ws: WebSocket;
+let readyState: Ref<number>;
+
+export const connected = computed(() => {
+    console.log('recomputing');
+    return readyState.value === 0;
+});
 
 const connect = () => {
     console.log('Connecting to Lighting WS Server...');
     if (ws) ws.close();
     ws = new WebSocket(import.meta.env.VITE_LIGHTING_WS_URL as string);
+    readyState = ref(ws.readyState);
 
     ws.addEventListener('open', onConnect);
     ws.addEventListener('message', onMessage);

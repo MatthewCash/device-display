@@ -2,6 +2,8 @@
     <div class="info">
         <h1 class="info-title">Info</h1>
         <hr class="info-separator" />
+        <h2 class="disconnected">Disconnected from Device Controller</h2>
+        <h3 v-if="devices.length === 0">No Devices Detected</h3>
         <div
             class="device-container"
             v-for="device of devices"
@@ -42,7 +44,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
 .info {
     display: flex;
     flex-direction: column;
@@ -94,5 +96,18 @@ export default defineComponent({
 .device-info {
     font-family: monospace;
     font-size: 1.3rem;
+}
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+.disconnected {
+    color: red;
+    animation: pulse 2s infinite;
 }
 </style>
