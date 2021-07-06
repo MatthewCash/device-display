@@ -82,7 +82,7 @@ export default defineComponent({
 }
 .effect-container > div {
     width: 100%;
-    padding: 25px 0;
+    padding: 35px 0;
 }
 .effect-status {
     background-color: rgb(88, 88, 88);

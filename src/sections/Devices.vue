@@ -16,7 +16,7 @@
                 class="device-status"
                 :class="{ 'device-enabled': device.status }"
             >
-                <div v-show="device.loading" class="loading">
+                <div class="loading">
                     <div class="spinner"></div>
                 </div>
                 <span v-show="!device.loading">{{
@@ -80,7 +80,7 @@ export default defineComponent({
 }
 .device-container > div {
     width: 100%;
-    padding: 25px 0;
+    padding: 35px 0;
 }
 .device-status {
     position: relative;
@@ -95,7 +95,7 @@ export default defineComponent({
 .loading {
     display: flex;
     justify-content: center;
-    align-items: top;
+    align-items: center;
 }
 .device-info {
     font-family: monospace;

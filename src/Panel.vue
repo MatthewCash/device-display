@@ -54,7 +54,7 @@ export default defineComponent({
     height: 10em;
 }
 .spinner {
-    top: 11px;
+    bottom: 23.4px;
     font-size: 6px;
     position: absolute;
     text-indent: -9999em;
