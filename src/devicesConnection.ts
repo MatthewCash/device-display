@@ -1,13 +1,17 @@
+import { computed, ref } from 'vue';
 import { loadDevices, DeviceUpdate, updateDevice } from './devices';
 
 let ws: WebSocket;
+let readyState = ref(0);
 
-export const connected = () => ws.readyState === 0;
+export const connected = computed(() => readyState.value === 1);
 
 const connect = () => {
     console.log('Devices Connecting to WS Server...');
+
     if (ws) ws.close();
     ws = new WebSocket(import.meta.env.VITE_DEVICES_WS_URL as string);
+    readyState.value = ws.readyState;
 
     ws.addEventListener('open', onConnect);
     ws.addEventListener('message', onMessage);
@@ -16,6 +20,7 @@ const connect = () => {
 };
 
 const onConnect = () => {
+    readyState.value = ws.readyState;
     console.log('Devices WebSocket Connected!');
 };
 
@@ -42,13 +47,14 @@ const onError = (error: Event) => {
 };
 
 const onClose = () => {
+    readyState.value = ws.readyState;
     console.log('Devices WebSocket Disconnected!');
 };
 
 export const startWebSocketConnection = () => {
     connect();
     setInterval(() => {
-        if (ws.readyState === WebSocket.OPEN) return;
+        if (connected.value) return;
         connect();
     }, 3000);
 };

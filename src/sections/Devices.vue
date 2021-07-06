@@ -5,7 +5,7 @@
         <h2 v-if="!connected" class="disconnected">
             Disconnected from Device Controller
         </h2>
-        <h3 v-if="devices.length === 0">No Devices Detected</h3>
+        <h3 v-if="connected && devices.length === 0">No Devices Detected</h3>
         <div
             class="device-container"
             v-for="device of devices"
@@ -16,7 +16,12 @@
                 class="device-status"
                 :class="{ 'device-enabled': device.status }"
             >
-                {{ device.status ? 'On' : 'Off' }}
+                <div v-show="device.loading" class="loading">
+                    <div class="spinner"></div>
+                </div>
+                <span v-show="!device.loading">{{
+                    device.status ? 'On' : 'Off'
+                }}</span>
             </div>
             <div class="device-info">
                 <span class="device-name">{{ device.name }}</span>
@@ -78,37 +83,25 @@ export default defineComponent({
     padding: 25px 0;
 }
 .device-status {
+    position: relative;
     background-color: rgb(88, 88, 88);
     border-radius: 6px 0px 0px 6px;
     font-size: 1.2rem;
 }
+
 .device-enabled {
     background-color: rgb(150, 150, 150);
 }
-@keyframes device-enabled {
-    0% {
-        transform: translateX(0px);
-    }
-    50% {
-        transform: translateX(6px);
-    }
-    100% {
-        transform: translateX(0px);
-    }
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: top;
 }
 .device-info {
     font-family: monospace;
     font-size: 1.3rem;
 }
-@keyframes pulse {
-    0%,
-    100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.7;
-    }
-}
+
 .disconnected {
     color: red;
     animation: pulse 2s infinite;

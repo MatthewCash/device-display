@@ -5,6 +5,7 @@ export interface Device {
     name: string;
     id: string;
     status: boolean;
+    loading?: boolean;
 }
 export interface DeviceUpdate {
     name: Device['name'];
@@ -30,15 +31,22 @@ export const updateDevice = (deviceId: string, status: boolean) => {
     const device = devices.find(device => device.id === deviceId);
     if (!device) return;
 
+    device.loading = false;
+
     device.status = !!status;
 };
 
 export const setDevice = (deviceId: string, status: boolean) => {
+    const device = devices.find(device => device.id === deviceId);
+    if (!device) return;
+
     const deviceUpdateRequest: DeviceUpdateRequest = {
-        name: devices.find(device => device.id === deviceId)!.name,
+        name: device.name,
         id: deviceId,
         status
     };
+
+    device.loading = true;
 
     sendMessage({ deviceUpdateRequest });
 };

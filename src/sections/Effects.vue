@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, computed } from 'vue';
 import { LightingEffect, lightingEffects, reloadEffects } from '../effects';
 import { status } from '../status';
 import { sendMessage, connected } from '../lightingConnection';

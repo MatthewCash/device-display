@@ -7,24 +7,62 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import Devices from "./sections/Devices.vue";
-import Lighting from "./sections/Lighting.vue";
-import Effects from "./sections/Effects.vue";
+import { defineComponent } from 'vue';
+import Devices from './sections/Devices.vue';
+import Lighting from './sections/Lighting.vue';
+import Effects from './sections/Effects.vue';
 
 export default defineComponent({
-    name: "Panel",
+    name: 'Panel',
     components: {
         Devices,
         Lighting,
-        Effects,
-    },
+        Effects
+    }
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .grid-container {
     display: grid;
     grid-template-columns: calc(100% / 3) calc(100% / 3) calc(100% / 3);
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+@keyframes loading {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.spinner,
+.spinner:after {
+    border-radius: 50%;
+    width: 10em;
+    height: 10em;
+}
+.spinner {
+    top: 11px;
+    font-size: 6px;
+    position: absolute;
+    text-indent: -9999em;
+    border-top: 1.1em solid rgba(255, 255, 255, 0.2);
+    border-right: 1.1em solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1.1em solid rgba(255, 255, 255, 0.2);
+    border-left: 1.1em solid #ffffff;
+    transform: translateZ(0);
+    animation: loading 0.5s infinite linear;
 }
 </style>
