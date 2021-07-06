@@ -16,7 +16,7 @@
                 class="device-status"
                 :class="{ 'device-enabled': device.status }"
             >
-                <div class="loading">
+                <div v-show="device.loading" class="loading">
                     <div class="spinner"></div>
                 </div>
                 <span v-show="!device.loading">{{
