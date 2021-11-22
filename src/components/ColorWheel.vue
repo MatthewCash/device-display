@@ -101,7 +101,9 @@ export default defineComponent({
 
             if (!clientX || !clientY) return;
 
-            const targetDims = (event.currentTarget as HTMLElement).getBoundingClientRect();
+            const targetDims = (
+                event.currentTarget as HTMLElement
+            ).getBoundingClientRect();
 
             const { width, height } = targetDims;
 
