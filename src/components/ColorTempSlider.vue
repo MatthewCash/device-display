@@ -1,0 +1,101 @@
+<template>
+    <div>
+        <div
+            class="colortemp-slider"
+            @click="onColorTempUpdate"
+            @mousemove="onColorTempUpdate"
+            @touchmove="onColorTempUpdate"
+        >
+            <div
+                class="colortemp-indicator"
+                :style="{
+                    left: normalizedColorTemp + '%'
+                }"
+            ></div>
+        </div>
+    </div>
+</template>
+
+<script lang="ts">
+import { computed, defineComponent } from 'vue';
+import { sendMessage } from '../lightingConnection';
+import { status } from '../status';
+
+export default defineComponent({
+    name: 'ColorTempSlider',
+    setup: () => {
+        const normalizedColorTemp = computed(() => {
+            console.log(
+                `${status.colorTemp} -> ${Math.round(
+                    ((status.colorTemp || 2500) - 2500) / 65
+                )}`
+            );
+            return Math.round(((status.colorTemp || 2500) - 2500) / 65);
+        });
+
+        return { normalizedColorTemp };
+    },
+    methods: {
+        setColorTemp(colorTemp: number) {
+            sendMessage({
+                setWhite: colorTemp
+            });
+        },
+        onColorTempUpdate(event: MouseEvent | TouchEvent) {
+            let clientX = 0;
+
+            if (event.type === 'click') {
+                event = event as MouseEvent;
+                clientX = event.clientX;
+            }
+
+            if (event.type === 'mousemove') {
+                event = event as MouseEvent;
+                if (!event.buttons) return;
+                clientX = event.clientX;
+            }
+
+            if (event.type === 'touchmove') {
+                event = event as TouchEvent;
+                clientX = event.targetTouches[0].clientX;
+            }
+
+            if (!clientX) return;
+
+            const targetDims = (
+                event.currentTarget as HTMLElement
+            ).getBoundingClientRect();
+
+            const x = -clientX + targetDims.x + targetDims.width / 2;
+
+            if (Math.abs(x) > targetDims.width / 2) return;
+
+            const colorTemp = Math.round(
+                ((clientX - targetDims.x) / targetDims.width) * 6500 + 2500
+            );
+
+            this.setColorTemp(colorTemp);
+        }
+    }
+});
+</script>
+
+<style lang="scss" scoped>
+.colortemp-slider {
+    width: 300px;
+    height: 20px;
+    background: linear-gradient(to right, #ffb459, #b6ceff);
+    border-radius: 100px;
+    position: relative;
+    padding: 10px;
+}
+.colortemp-indicator {
+    border-radius: 50%;
+    background-color: white;
+    width: 70px;
+    height: 70px;
+    position: absolute;
+    transform: translate(-35px, -50%);
+    overflow: visible;
+}
+</style>

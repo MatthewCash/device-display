@@ -3,17 +3,25 @@
         <h1 class="lighting-title">Lighting</h1>
         <hr class="lighting-separator" />
         <ColorWheel />
+        <div style="margin-top: 50px"></div>
+        <BrightnessSlider></BrightnessSlider>
+        <div style="margin-top: 80px"></div>
+        <ColorTempSlider></ColorTempSlider>
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import ColorWheel from '../components/ColorWheel.vue';
+import BrightnessSlider from '../components/BrightnessSlider.vue';
+import ColorTempSlider from '../components/ColorTempSlider.vue';
 
 export default defineComponent({
     name: 'Lighting',
     components: {
-        ColorWheel
+        ColorWheel,
+        BrightnessSlider,
+        ColorTempSlider
     }
 });
 </script>
