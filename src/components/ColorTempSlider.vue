@@ -9,7 +9,8 @@
             <div
                 class="colortemp-indicator"
                 :style="{
-                    left: normalizedColorTemp + '%'
+                    left: normalizedColorTemp + '%',
+                    visibility: shouldHideIndicator ? 'hidden' : 'visible'
                 }"
             ></div>
         </div>
@@ -24,16 +25,15 @@ import { status } from '../status';
 export default defineComponent({
     name: 'ColorTempSlider',
     setup: () => {
+        const shouldHideIndicator = computed(() => {
+            return status.colorTemp === 0;
+        });
+
         const normalizedColorTemp = computed(() => {
-            console.log(
-                `${status.colorTemp} -> ${Math.round(
-                    ((status.colorTemp || 2500) - 2500) / 65
-                )}`
-            );
             return Math.round(((status.colorTemp || 2500) - 2500) / 65);
         });
 
-        return { normalizedColorTemp };
+        return { normalizedColorTemp, shouldHideIndicator };
     },
     methods: {
         setColorTemp(colorTemp: number) {
