@@ -23,7 +23,6 @@ body {
     overscroll-behavior: none;
 }
 * {
-    overflow: hidden;
     box-sizing: border-box;
     user-select: none;
 }
