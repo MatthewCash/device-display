@@ -76,7 +76,7 @@ export default defineComponent({
     width: 300px;
     height: 20px;
     background: linear-gradient(to right, #000000 0%, #ffffff 100%);
-    border-radius: 0 100px 100px 0;
+    border-radius: 0 1em 1em 0;
     position: relative;
     padding: 10px;
 }

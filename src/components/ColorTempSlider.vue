@@ -85,7 +85,7 @@ export default defineComponent({
     width: 300px;
     height: 20px;
     background: linear-gradient(to right, #ffb459, #b6ceff);
-    border-radius: 100px;
+    border-radius: 1em;
     position: relative;
     padding: 10px;
 }
