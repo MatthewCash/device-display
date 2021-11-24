@@ -9,7 +9,8 @@
             <div
                 class="brightness-indicator"
                 :style="{
-                    left: status.brightness + '%'
+                    left: status.brightness + '%',
+                    visibility: shouldHideIndicator ? 'hidden' : 'visible'
                 }"
             ></div>
         </div>
@@ -17,14 +18,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { sendMessage } from '../lightingConnection';
 import { status } from '../status';
 
 export default defineComponent({
     name: 'BrightnessSlider',
     setup: () => {
-        return { status };
+        const shouldHideIndicator = computed(() => {
+            return status.power === false;
+        });
+
+        return { status, shouldHideIndicator };
     },
     methods: {
         setBrightness(brightness: number) {
