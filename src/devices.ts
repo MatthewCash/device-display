@@ -6,12 +6,14 @@ export interface Device {
     id: string;
     status: boolean;
     loading?: boolean;
+    tags?: string[];
 }
 export interface DeviceUpdate {
     name: Device['name'];
     id: Device['id'];
     status: Device['status'];
     updated: boolean;
+    tags?: Device['tags'];
 }
 
 export interface DeviceUpdateRequest {
@@ -23,8 +25,17 @@ export interface DeviceUpdateRequest {
 export const devices: Device[] = reactive([]);
 
 export const loadDevices = (loadDevices: Device[]) => {
+    console.log(loadDevices);
+    const filteredDevices = import.meta.env.VITE_DEVICE_FILTER_TAG
+        ? loadDevices.filter(device =>
+              device.tags?.includes(
+                  String(import.meta.env.VITE_DEVICE_FILTER_TAG)
+              )
+          )
+        : loadDevices;
+
     devices.length = 0;
-    devices.push(...loadDevices);
+    devices.push(...filteredDevices);
 };
 
 export const updateDevice = (deviceId: string, status: boolean) => {
