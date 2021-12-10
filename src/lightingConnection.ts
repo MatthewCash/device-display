@@ -21,6 +21,15 @@ const connect = () => {
 };
 
 const onConnect = () => {
+    const authToken = import.meta.env.VITE_LIGHTING_AUTHORIZATION as string;
+    if (authToken) {
+        ws.send(
+            JSON.stringify({
+                authorization: authToken
+            })
+        );
+    }
+
     readyState.value = ws.readyState;
     console.log('Lighting WebSocket Connected!');
 };
