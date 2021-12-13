@@ -1,5 +1,5 @@
 import { reactive } from 'vue';
-import { sendMessage } from '././devicesConnection';
+import { sendCommands } from '././devicesConnection';
 
 export interface Device {
     name: string;
@@ -58,5 +58,5 @@ export const setDevice = (deviceId: string, status: boolean) => {
 
     device.loading = true;
 
-    sendMessage({ deviceUpdateRequest });
+    sendCommands({ deviceUpdateRequest });
 };
