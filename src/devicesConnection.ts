@@ -1,5 +1,11 @@
 import { computed, ref } from 'vue';
-import { loadDevices, DeviceUpdate, updateDevice } from './devices';
+import {
+    loadDevices,
+    DeviceUpdate,
+    updateDevice,
+    DeviceUpdateRequest,
+    Device
+} from './devices';
 
 let ws: WebSocket;
 
@@ -30,8 +36,31 @@ const onConnect = () => {
     console.log('Devices WebSocket Connected!');
 };
 
+export interface InternalDeviceUpdate {
+    name: Device['name'];
+    id: Device['id'];
+    status: Device['status'];
+}
+interface Commands {
+    deviceUpdateRequest?: DeviceUpdateRequest;
+    internalDeviceUpdate?: InternalDeviceUpdate;
+    deviceUpdate?: DeviceUpdate;
+    deviceList?: Device[];
+    setScene?: string | any;
+}
+
+interface SocketMessage {
+    commands?: Commands;
+    auth?: {
+        authorization?: string;
+    };
+    state?: {
+        authorized?: boolean;
+    };
+}
+
 const onMessage = (message: MessageEvent) => {
-    let data;
+    let data: SocketMessage;
     try {
         data = JSON.parse(message?.data);
     } catch {
@@ -39,20 +68,21 @@ const onMessage = (message: MessageEvent) => {
     }
 
     if (data?.state?.authorized !== null)
-        socketStatus.authorized = data?.state?.authorized;
+        socketStatus.authorized = !!data?.state?.authorized;
 
     if (data?.state?.authorized === false) {
         const authToken = import.meta.env.VITE_DEVICES_AUTHORIZATION as string;
         sendMessage({ auth: { authorization: authToken } });
     }
 
-    if (data?.commands?.['deviceList']) {
-        loadDevices(data?.commands?.['deviceList']);
+    const deviceList = data?.commands?.deviceList;
+    if (deviceList) {
+        loadDevices(deviceList);
     }
-    if (data?.commands?.['deviceUpdate']) {
-        const update = data?.commands?.['deviceUpdate'] as DeviceUpdate;
 
-        updateDevice(update.id, update.status);
+    const deviceUpdate = data?.commands?.deviceUpdate;
+    if (deviceUpdate) {
+        updateDevice(deviceUpdate.id, deviceUpdate.status);
     }
 };
 
@@ -76,10 +106,6 @@ export const startWebSocketConnection = () => {
 export const sendMessage = (data: any) => {
     ws.send(JSON.stringify(data));
 };
-
-interface Commands {
-    [name: string]: any;
-}
 
 export const sendCommands = (commands: Commands) => {
     sendMessage({ commands });
