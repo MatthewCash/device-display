@@ -25,7 +25,7 @@ export interface DeviceUpdateRequest {
 export const devices: Device[] = reactive([]);
 
 export const loadDevices = (loadDevices: Device[]) => {
-    const deviceFilterTag = String(import.meta.env.VITE_DEVICE_FILTER_TAG);
+    const deviceFilterTag = import.meta.env.VITE_DEVICE_FILTER_TAG as string;
     const filteredDevices = deviceFilterTag
         ? loadDevices.filter(device => device.tags?.includes(deviceFilterTag))
         : loadDevices;
