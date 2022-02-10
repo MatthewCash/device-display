@@ -2,20 +2,20 @@
     "name": "device-display-v2",
     "version": "0.0.0",
     "scripts": {
-        "dev": "vite",
+        "dev": "vite --host",
         "build": "vite build"
     },
     "dependencies": {
-        "@types/ws": "^8.2.1",
-        "vue": "^3.2.23"
+        "@types/ws": "^8.2.2",
+        "vue": "^3.2.30"
     },
     "devDependencies": {
-        "@vitejs/plugin-vue": "^1.10.1",
-        "@vue/compiler-sfc": "^3.2.23",
+        "@vitejs/plugin-vue": "^2.2.0",
+        "@vue/compiler-sfc": "^3.2.30",
         "@vuedx/typecheck": "^0.7.4",
         "@vuedx/typescript-plugin-vue": "^0.7.4",
-        "sass": "^1.44.0",
-        "typescript": "^4.5.2",
-        "vite": "^2.6.14"
+        "sass": "^1.49.7",
+        "typescript": "^4.5.5",
+        "vite": "^2.8.0"
     }
 }
