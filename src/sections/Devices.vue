@@ -14,13 +14,13 @@
         >
             <div
                 class="device-status"
-                :class="{ 'device-enabled': device.status }"
+                :class="{ 'device-enabled': device?.status?.state }"
             >
                 <div v-show="device.loading" class="loading">
                     <div class="spinner"></div>
                 </div>
                 <span v-show="!device.loading">{{
-                    device.status ? 'On' : 'Off'
+                    device?.status?.state ? 'On' : 'Off'
                 }}</span>
             </div>
             <div class="device-info">
@@ -46,7 +46,7 @@ export default defineComponent({
     },
     methods: {
         toggleDevice(device: Device) {
-            setDevice(device.id, !device.status);
+            setDevice(device.id, !device?.status?.state);
         }
     }
 });

@@ -63,6 +63,8 @@ const onMessage = (message: MessageEvent) => {
     let data: SocketMessage;
     try {
         data = JSON.parse(message?.data);
+        console.log('got data')
+        console.log(data)
     } catch {
         return ws.send('Invalid JSON!');
     }
@@ -72,6 +74,9 @@ const onMessage = (message: MessageEvent) => {
 
     if (data?.state?.authorized === false) {
         const authToken = import.meta.env.VITE_DEVICES_AUTHORIZATION as string;
+
+        if (!authToken) console.error('No devices authorization token provided!')
+
         sendMessage({ auth: { authorization: authToken } });
     }
 
@@ -82,7 +87,7 @@ const onMessage = (message: MessageEvent) => {
 
     const deviceUpdate = data?.commands?.deviceUpdate;
     if (deviceUpdate) {
-        updateDevice(deviceUpdate.id, deviceUpdate.status);
+        updateDevice(deviceUpdate);
     }
 };
 

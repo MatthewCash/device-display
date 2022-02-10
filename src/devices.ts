@@ -1,25 +1,30 @@
 import { reactive } from 'vue';
 import { sendCommands } from '././devicesConnection';
 
+export interface DeviceStatus {
+    online: boolean; // Device is reachable
+    state: boolean; // Controlled state
+    changingTo?: boolean; // Device changing state
+}
 export interface Device {
     name: string;
     id: string;
-    status: boolean;
+    status: DeviceStatus;
     loading?: boolean;
     tags?: string[];
 }
 export interface DeviceUpdate {
     name: Device['name'];
     id: Device['id'];
-    status: Device['status'];
-    updated: boolean;
+    status: DeviceStatus;
+    updated?: boolean;
     tags?: Device['tags'];
 }
 
 export interface DeviceUpdateRequest {
     name: Device['name'];
     id: Device['id'];
-    status: Device['status'];
+    requestedState: DeviceStatus['state'];
 }
 
 export const devices: Device[] = reactive([]);
@@ -34,23 +39,24 @@ export const loadDevices = (loadDevices: Device[]) => {
     devices.push(...filteredDevices);
 };
 
-export const updateDevice = (deviceId: string, status: boolean) => {
-    const device = devices.find(device => device.id === deviceId);
+export const updateDevice = (update: DeviceUpdate) => {
+    const device = devices.find(device => device.id === update.id);
     if (!device) return;
 
-    device.loading = false;
-
-    device.status = !!status;
+    device.loading = update.status.changingTo;
+    device.status = update.status;
+    device.tags = update.tags;
+    device.name = update.name;
 };
 
-export const setDevice = (deviceId: string, status: boolean) => {
+export const setDevice = (deviceId: string, requestedState: boolean) => {
     const device = devices.find(device => device.id === deviceId);
     if (!device) return;
 
     const deviceUpdateRequest: DeviceUpdateRequest = {
         name: device.name,
         id: deviceId,
-        status
+        requestedState
     };
 
     device.loading = true;
