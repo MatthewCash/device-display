@@ -7,6 +7,10 @@ import {
     Device
 } from './devices';
 
+const deviceWsUrl =
+    String(import.meta.env.VITE_DEVICES_WS_URL) || 'ws://epsilon.zero:3001';
+const devicesAuthToken = String(import.meta.env.VITE_DEVICES_AUTHORIZATION);
+
 let ws: WebSocket;
 
 const socketStatus = {
@@ -22,7 +26,7 @@ const connect = () => {
     console.log('Devices Connecting to WS Server...');
 
     if (ws) ws.close();
-    ws = new WebSocket(import.meta.env.VITE_DEVICES_WS_URL as string);
+    ws = new WebSocket(deviceWsUrl);
     setReadyState(ws.readyState);
 
     ws.addEventListener('open', onConnect);
@@ -63,8 +67,6 @@ const onMessage = (message: MessageEvent) => {
     let data: SocketMessage;
     try {
         data = JSON.parse(message?.data);
-        console.log('got data')
-        console.log(data)
     } catch {
         return ws.send('Invalid JSON!');
     }
@@ -73,11 +75,10 @@ const onMessage = (message: MessageEvent) => {
         socketStatus.authorized = !!data?.state?.authorized;
 
     if (data?.state?.authorized === false) {
-        const authToken = import.meta.env.VITE_DEVICES_AUTHORIZATION as string;
+        if (!devicesAuthToken)
+            console.error('No devices authorization token provided!');
 
-        if (!authToken) console.error('No devices authorization token provided!')
-
-        sendMessage({ auth: { authorization: authToken } });
+        sendMessage({ auth: { authorization: devicesAuthToken } });
     }
 
     const deviceList = data?.commands?.deviceList;

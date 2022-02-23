@@ -2,6 +2,10 @@ import { ref, computed } from 'vue';
 import { loadEffects } from './effects';
 import { setStatus } from './status';
 
+const lightingWsUrl =
+    String(import.meta.env.VITE_LIGHTING_WS_URL) || 'ws://epsilon.zero:3001';
+const lightingAuthToken = String(import.meta.env.VITE_LIGHTING_AUTHORIZATION);
+
 let ws: WebSocket;
 let readyState = ref(0);
 
@@ -11,7 +15,7 @@ const connect = () => {
     console.log('Connecting to Lighting WS Server...');
 
     if (ws) ws.close();
-    ws = new WebSocket(import.meta.env.VITE_LIGHTING_WS_URL as string);
+    ws = new WebSocket(lightingWsUrl);
     readyState.value = ws.readyState;
 
     ws.addEventListener('open', onConnect);
@@ -21,11 +25,10 @@ const connect = () => {
 };
 
 const onConnect = () => {
-    const authToken = import.meta.env.VITE_LIGHTING_AUTHORIZATION as string;
-    if (authToken) {
+    if (lightingAuthToken) {
         ws.send(
             JSON.stringify({
-                authorization: authToken
+                authorization: lightingAuthToken
             })
         );
     }
