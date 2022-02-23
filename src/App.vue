@@ -17,6 +17,7 @@ export default defineComponent({
 <style>
 html {
     font-size: 20px;
+    overflow: hidden;
 }
 body {
     margin: 0;

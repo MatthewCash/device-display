@@ -78,7 +78,7 @@ export default defineComponent({
     text-align: center;
     background-color: rgb(68, 68, 68);
     border-radius: 6px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 .effect-container > div {
     width: 100%;
@@ -108,6 +108,7 @@ export default defineComponent({
     font-family: monospace;
     font-size: 1.3rem;
 }
+
 .disconnected {
     color: red;
     animation: pulse 2s infinite;

@@ -90,10 +90,10 @@ export default defineComponent({
     padding: 10px;
 }
 .colortemp-indicator {
-    border-radius: 50%;
-    background-color: white;
-    width: 70px;
-    height: 70px;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.9);
+    width: 75px;
+    height: 50px;
     position: absolute;
     transform: translate(-35px, -50%);
     overflow: visible;
