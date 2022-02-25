@@ -38,7 +38,7 @@ export default defineComponent({
     methods: {
         setColorTemp(colorTemp: number) {
             sendMessage({
-                setWhite: colorTemp
+                update: { colorTemp }
             });
         },
         onColorTempUpdate(event: MouseEvent | TouchEvent) {

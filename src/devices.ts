@@ -3,8 +3,8 @@ import { sendCommands } from '././devicesConnection';
 
 export interface DeviceStatus {
     online: boolean; // Device is reachable
-    state: boolean; // Controlled state
-    changingTo?: boolean; // Device changing state
+    state: any; // Controlled state
+    changingTo?: DeviceStatus['state']; // Device changing state
 }
 export interface Device {
     name: string;

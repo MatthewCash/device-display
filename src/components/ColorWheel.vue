@@ -116,7 +116,7 @@ export default defineComponent({
             const { hue, saturation } = this.getHueSaturation(height / 2, x, y);
 
             sendMessage({
-                setHueSaturation: { hue, saturation }
+                update: { hue, saturation }
             });
         }
     }

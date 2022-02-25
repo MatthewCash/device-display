@@ -34,7 +34,7 @@ export default defineComponent({
     methods: {
         setBrightness(brightness: number) {
             sendMessage({
-                setBrightness: brightness
+                update: { brightness }
             });
         },
         onBrightnessUpdate(event: MouseEvent | TouchEvent) {
