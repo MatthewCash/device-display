@@ -2,31 +2,35 @@
     <div class="effects">
         <h1 class="effects-title" @click="reloadEffects()">Effects</h1>
         <hr class="effects-separator" />
-        <h2 v-if="!connected" class="disconnected">
+        <h2 v-show="!connected" class="disconnected-alert">
             Disconnected from Lighting Controller
         </h2>
-        <h3 v-if="lightingEffects.length === 0">No Effects Configured</h3>
-        <div
-            class="effect-container"
-            v-for="effect of lightingEffects"
-            :key="effect.id"
-            @click="toggleEffect(effect)"
-        >
+        <div class="effects-list" :class="{ disconnected: !connected }">
+            <h3 v-show="connected && lightingEffects.length === 0">
+                No Effects Configured
+            </h3>
             <div
-                class="effect-status"
-                :class="{ 'effect-enabled': effectIsEnabled(effect) }"
+                class="effect-container"
+                v-for="effect of lightingEffects"
+                :key="effect.id"
+                @click="toggleEffect(effect)"
             >
-                {{ effectIsEnabled(effect) ? 'Enabled' : 'Disabled' }}
-            </div>
-            <div class="effect-info">
-                <span class="effect-name">{{ effect.name }}</span>
+                <div
+                    class="effect-status"
+                    :class="{ 'effect-enabled': effectIsEnabled(effect) }"
+                >
+                    {{ effectIsEnabled(effect) ? 'Enabled' : 'Disabled' }}
+                </div>
+                <div class="effect-info">
+                    <span class="effect-name">{{ effect.name }}</span>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import { defineComponent } from 'vue';
 import { LightingEffect, lightingEffects, reloadEffects } from '../effects';
 import { status } from '../status';
 import { sendMessage, connected } from '../lightingConnection';
@@ -57,6 +61,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .effects {
     display: flex;
+    position: relative;
     flex-direction: column;
     align-items: center;
     text-align: center;
@@ -71,17 +76,21 @@ export default defineComponent({
     width: 80%;
     margin: 10px 0 30px;
 }
+.effects-list {
+    width: 100%;
+}
+.effects-list.disconnected {
+    filter: blur(3px) brightness(0.6);
+}
 .effect-container {
     display: grid;
     grid-template-columns: 40% 60%;
-    width: 100%;
     text-align: center;
     background-color: rgb(68, 68, 68);
     border-radius: 6px;
     margin-bottom: 20px;
 }
 .effect-container > div {
-    width: 100%;
     padding: 35px 0;
 }
 .effect-status {
@@ -109,8 +118,11 @@ export default defineComponent({
     font-size: 1.3rem;
 }
 
-.disconnected {
+.disconnected-alert {
     color: red;
     animation: pulse 2s infinite;
+    position: absolute;
+    display: block;
+    top: 4em;
 }
 </style>

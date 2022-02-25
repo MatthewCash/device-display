@@ -8,20 +8,27 @@ const lightingAuthToken = String(import.meta.env.VITE_LIGHTING_AUTHORIZATION);
 
 let ws: WebSocket;
 let readyState = ref(0);
+export const alive = ref(false);
 
-export const connected = computed(() => readyState.value === 1);
+export const connected = computed(() => readyState?.value === WebSocket.OPEN);
 
 const connect = () => {
     console.log('Connecting to Lighting WS Server...');
 
     if (ws) ws.close();
-    ws = new WebSocket(lightingWsUrl);
-    readyState.value = ws.readyState;
 
-    ws.addEventListener('open', onConnect);
-    ws.addEventListener('message', onMessage);
-    ws.addEventListener('error', onError);
-    ws.addEventListener('close', onClose);
+    try {
+        ws = new WebSocket(lightingWsUrl);
+
+        ws.addEventListener('open', onConnect);
+        ws.addEventListener('message', onMessage);
+        ws.addEventListener('error', onError);
+        ws.addEventListener('close', onClose);
+    } catch (error) {
+        console.error(error);
+    }
+
+    readyState.value = ws?.readyState ?? WebSocket.CLOSED;
 };
 
 const onConnect = () => {
@@ -38,6 +45,10 @@ const onConnect = () => {
 };
 
 const onMessage = (message: MessageEvent) => {
+    if (message?.data?.toString() === 'ping') {
+        return (alive.value = true);
+    }
+
     let data;
     try {
         data = JSON.parse(message?.data);
@@ -63,9 +74,10 @@ const onClose = () => {
 export const startWebSocketConnection = () => {
     connect();
     setInterval(() => {
-        if (connected.value) return;
-        connect();
-    }, 3000);
+        if (!alive.value) return connect();
+
+        alive.value = false;
+    }, 5000);
 };
 
 export const sendMessage = (data: any) => {

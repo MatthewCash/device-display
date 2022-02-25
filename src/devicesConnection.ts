@@ -18,7 +18,9 @@ const socketStatus = {
     authorized: false
 };
 
-export const connected = computed(() => socketStatus?.readyState?.value === 1);
+export const connected = computed(
+    () => socketStatus?.readyState?.value === WebSocket.OPEN
+);
 const setReadyState = (readyState: number) =>
     (socketStatus.readyState.value = readyState);
 
@@ -26,13 +28,19 @@ const connect = () => {
     console.log('Devices Connecting to WS Server...');
 
     if (ws) ws.close();
-    ws = new WebSocket(deviceWsUrl);
-    setReadyState(ws.readyState);
 
-    ws.addEventListener('open', onConnect);
-    ws.addEventListener('message', onMessage);
-    ws.addEventListener('error', onError);
-    ws.addEventListener('close', onClose);
+    try {
+        ws = new WebSocket(deviceWsUrl);
+
+        ws.addEventListener('open', onConnect);
+        ws.addEventListener('message', onMessage);
+        ws.addEventListener('error', onError);
+        ws.addEventListener('close', onClose);
+    } catch (error) {
+        console.error(error);
+    }
+
+    setReadyState(ws?.readyState ?? WebSocket.CLOSED);
 };
 
 const onConnect = () => {
