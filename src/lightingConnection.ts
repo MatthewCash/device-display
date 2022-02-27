@@ -3,12 +3,12 @@ import { loadEffects } from './effects';
 import { setStatus } from './status';
 
 const lightingWsUrl =
-    String(import.meta.env.VITE_LIGHTING_WS_URL) || 'ws://epsilon.zero:3001';
+    String(import.meta.env.VITE_LIGHTING_WS_URL) || 'ws://epsilon.zero:1728';
 const lightingAuthToken = String(import.meta.env.VITE_LIGHTING_AUTHORIZATION);
 
 let ws: WebSocket;
 let readyState = ref(0);
-export const alive = ref(false);
+let alive = false;
 
 export const connected = computed(() => readyState?.value === WebSocket.OPEN);
 
@@ -46,7 +46,7 @@ const onConnect = () => {
 
 const onMessage = (message: MessageEvent) => {
     if (message?.data?.toString() === 'ping') {
-        return (alive.value = true);
+        return (alive = true);
     }
 
     let data;
@@ -74,9 +74,9 @@ const onClose = () => {
 export const startWebSocketConnection = () => {
     connect();
     setInterval(() => {
-        if (!alive.value) return connect();
+        if (!alive) return connect();
 
-        alive.value = false;
+        alive = false;
     }, 5000);
 };
 

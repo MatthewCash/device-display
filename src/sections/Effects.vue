@@ -80,7 +80,7 @@ export default defineComponent({
     width: 100%;
 }
 .effects-list.disconnected {
-    filter: blur(3px) brightness(0.6);
+    filter: blur(3px) brightness(0.3);
 }
 .effect-container {
     display: grid;
@@ -120,9 +120,12 @@ export default defineComponent({
 
 .disconnected-alert {
     color: red;
+    font-size: 2rem;
     animation: pulse 2s infinite;
+    text-shadow: 0.05rem 0.05rem white;
     position: absolute;
     display: block;
-    top: 4em;
+    top: 2.5em;
+    z-index: 100;
 }
 </style>

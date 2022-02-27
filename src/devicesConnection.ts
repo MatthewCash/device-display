@@ -15,7 +15,8 @@ let ws: WebSocket;
 
 const socketStatus = {
     readyState: ref(0),
-    authorized: false
+    authorized: false,
+    alive: false
 };
 
 export const connected = computed(
@@ -61,7 +62,7 @@ interface Commands {
     setScene?: string | any;
 }
 
-interface SocketMessage {
+interface InboundSocketMessage {
     commands?: Commands;
     auth?: {
         authorization?: string;
@@ -69,14 +70,32 @@ interface SocketMessage {
     state?: {
         authorized?: boolean;
     };
+    connection?: {
+        ping?: true;
+    };
+}
+
+interface OutboundSocketMessage {
+    commands?: Commands;
+    auth?: {
+        authorization?: string;
+    };
+    connection?: {
+        pong?: true;
+    };
 }
 
 const onMessage = (message: MessageEvent) => {
-    let data: SocketMessage;
+    let data: InboundSocketMessage;
     try {
         data = JSON.parse(message?.data);
     } catch {
         return ws.send('Invalid JSON!');
+    }
+
+    if (data?.connection?.ping === true) {
+        socketStatus.alive = true;
+        sendMessage({ connection: { pong: true } });
     }
 
     if (data?.state?.authorized !== null)
@@ -112,12 +131,13 @@ const onClose = () => {
 export const startWebSocketConnection = () => {
     connect();
     setInterval(() => {
-        if (connected.value) return;
-        connect();
-    }, 3000);
+        if (!socketStatus.alive) connect();
+
+        socketStatus.alive = false;
+    }, 5000);
 };
 
-export const sendMessage = (data: any) => {
+export const sendMessage = (data: OutboundSocketMessage) => {
     ws.send(JSON.stringify(data));
 };
 

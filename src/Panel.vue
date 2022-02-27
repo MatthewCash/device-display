@@ -34,7 +34,7 @@ export default defineComponent({
         opacity: 1;
     }
     50% {
-        opacity: 0.7;
+        opacity: 0.5;
     }
 }
 
