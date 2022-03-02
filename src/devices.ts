@@ -11,14 +11,15 @@ export interface Device {
     id: string;
     status: DeviceStatus;
     loading?: boolean;
-    tags?: string[];
+    tags: string[];
+    capabilities: string[];
 }
 export interface DeviceUpdate {
     name: Device['name'];
     id: Device['id'];
     status: DeviceStatus;
-    updated?: boolean;
     tags?: Device['tags'];
+    capabilities?: Device['capabilities'];
 }
 
 export interface DeviceUpdateRequest {
@@ -45,18 +46,21 @@ export const updateDevice = (update: DeviceUpdate) => {
 
     device.loading = update.status.changingTo;
     device.status = update.status;
-    device.tags = update.tags;
     device.name = update.name;
+    device.tags = update.tags ?? device.tags;
+    device.capabilities = update.capabilities ?? device.capabilities;
 };
 
-export const setDevice = (deviceId: string, requestedState: boolean) => {
+export const setDevice = (deviceId: string, requestedPowerState: boolean) => {
     const device = devices.find(device => device.id === deviceId);
     if (!device) return;
 
     const deviceUpdateRequest: DeviceUpdateRequest = {
         name: device.name,
         id: deviceId,
-        requestedState
+        requestedState: {
+            power: requestedPowerState
+        }
     };
 
     device.loading = true;

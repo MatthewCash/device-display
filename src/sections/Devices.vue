@@ -23,13 +23,13 @@
             >
                 <div
                     class="device-status"
-                    :class="{ 'device-enabled': device?.status?.state }"
+                    :class="{ 'device-enabled': device?.status?.state?.power }"
                 >
                     <div v-show="device.loading" class="loading">
                         <div class="spinner"></div>
                     </div>
                     <span v-show="!device.loading">{{
-                        device?.status?.state ? 'On' : 'Off'
+                        device?.status?.state?.power ? 'On' : 'Off'
                     }}</span>
                 </div>
                 <div class="device-info">
@@ -54,19 +54,21 @@ export default defineComponent({
     name: 'devices',
     setup: () => {
         const sortedDevices = computed(() =>
-            devices.sort((a, b) => a.name.localeCompare(b.name))
+            devices
+                .filter(device => device.capabilities?.includes('bool-switch'))
+                .sort((a, b) => a.name.localeCompare(b.name))
         );
 
         return { devices: sortedDevices, connected, scenes };
     },
     methods: {
         toggleDevice(device: Device) {
-            setDevice(device.id, !device?.status?.state);
+            setDevice(device.id, !device?.status?.state?.power);
         },
-        runScene(id: string) {
+        runScene(sceneId: string) {
             sendMessage({
                 commands: {
-                    setScene: id
+                    setScene: sceneId
                 }
             });
         }
