@@ -1,5 +1,5 @@
 import { reactive } from 'vue';
-import { sendMessage } from './lightingConnection';
+import { sendCommands } from './devicesConnection';
 
 export interface LightingEffect {
     interval: number;
@@ -15,5 +15,5 @@ export const loadEffects = (effects: LightingEffect[]) => {
 };
 
 export const reloadEffects = () => {
-    sendMessage({ reloadLightingEffects: true });
+    sendCommands({ reloadLightingEffects: true });
 };

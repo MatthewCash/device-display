@@ -1,5 +1,8 @@
 <template>
-    <div class="grid-container">
+    <h2 v-show="!connected" class="disconnected-alert">
+        Disconnected from <br />Device Controller
+    </h2>
+    <div class="grid-container sections" :class="{ disconnected: !connected }">
         <div class="grid-item devices"><Devices /></div>
         <div class="grid-item basic"><Lighting /></div>
         <div class="grid-item effects"><Effects /></div>
@@ -11,9 +14,13 @@ import { defineComponent } from 'vue';
 import Devices from './sections/Devices.vue';
 import Lighting from './sections/Lighting.vue';
 import Effects from './sections/Effects.vue';
+import { connected } from './devicesConnection';
 
 export default defineComponent({
     name: 'Panel',
+    setup: () => {
+        return { connected };
+    },
     components: {
         Devices,
         Lighting,
@@ -64,5 +71,27 @@ export default defineComponent({
     border-left: 1.1em solid #ffffff;
     transform: translateZ(0);
     animation: loading 0.5s infinite linear;
+}
+
+.sections {
+    transition: 2s filter;
+}
+
+.sections.disconnected {
+    filter: blur(20px) brightness(0.3);
+}
+
+.disconnected-alert {
+    color: red;
+    font-size: 3.5rem;
+    font-weight: bold;
+    animation: pulse 2s infinite;
+    text-shadow: 0.05rem 0.05rem white;
+    position: absolute;
+    display: block;
+    top: 2.5em;
+    z-index: 100;
+    text-align: center;
+    width: 100%;
 }
 </style>

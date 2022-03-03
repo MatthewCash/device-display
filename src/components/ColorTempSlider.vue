@@ -19,27 +19,32 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
-import { sendMessage } from '../lightingConnection';
-import { status } from '../status';
+import { devices, updateDeviceState } from '../devices';
 
 export default defineComponent({
     name: 'ColorTempSlider',
     setup: () => {
         const shouldHideIndicator = computed(() => {
-            return status.colorTemp === 0;
+            return (
+                devices.find(device => device.id === 'lights')?.status?.state
+                    ?.colorTemp === 0
+            );
         });
 
         const normalizedColorTemp = computed(() => {
-            return Math.round(((status.colorTemp || 2500) - 2500) / 65);
+            return Math.round(
+                ((devices.find(device => device.id === 'lights')?.status?.state
+                    ?.colorTemp || 2500) -
+                    2500) /
+                    65
+            );
         });
 
         return { normalizedColorTemp, shouldHideIndicator };
     },
     methods: {
         setColorTemp(colorTemp: number) {
-            sendMessage({
-                update: { colorTemp }
-            });
+            updateDeviceState('lights', { colorTemp });
         },
         onColorTempUpdate(event: MouseEvent | TouchEvent) {
             let clientX = 0;

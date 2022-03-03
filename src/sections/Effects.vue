@@ -2,13 +2,8 @@
     <div class="effects">
         <h1 class="effects-title" @click="reloadEffects()">Effects</h1>
         <hr class="effects-separator" />
-        <h2 v-show="!connected" class="disconnected-alert">
-            Disconnected from Lighting Controller
-        </h2>
-        <div class="effects-list" :class="{ disconnected: !connected }">
-            <h3 v-show="connected && lightingEffects.length === 0">
-                No Effects Configured
-            </h3>
+        <div class="effects-list">
+            <h3 v-show="lightingEffects.length === 0">No Effects Configured</h3>
             <div
                 class="effect-container"
                 v-for="effect of lightingEffects"
@@ -31,24 +26,26 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { devices, updateDeviceState } from '../devices';
 import { LightingEffect, lightingEffects, reloadEffects } from '../effects';
-import { status } from '../status';
-import { sendMessage, connected } from '../lightingConnection';
 
 export default defineComponent({
     name: 'Effects',
     setup: () => {
-        return { lightingEffects, status, connected };
+        return { lightingEffects, status };
     },
     methods: {
         effectIsEnabled(effect: LightingEffect) {
-            return this.status?.effect?.id === effect.id;
+            return (
+                devices.find(device => device.id === 'lights')?.status.state
+                    .effectId === effect.id
+            );
         },
         toggleEffect(effect: LightingEffect) {
             if (this.effectIsEnabled(effect)) {
-                sendMessage({ setEffect: null });
+                updateDeviceState('lights', { effectId: null });
             } else {
-                sendMessage({ setEffect: effect.id });
+                updateDeviceState('lights', { effectId: effect.id });
             }
         },
         reloadEffects() {
@@ -79,9 +76,7 @@ export default defineComponent({
 .effects-list {
     width: 100%;
 }
-.effects-list.disconnected {
-    filter: blur(3px) brightness(0.3);
-}
+
 .effect-container {
     display: grid;
     grid-template-columns: 40% 60%;
@@ -116,16 +111,5 @@ export default defineComponent({
 .effect-info {
     font-family: monospace;
     font-size: 1.3rem;
-}
-
-.disconnected-alert {
-    color: red;
-    font-size: 2rem;
-    animation: pulse 2s infinite;
-    text-shadow: 0.05rem 0.05rem white;
-    position: absolute;
-    display: block;
-    top: 2.5em;
-    z-index: 100;
 }
 </style>

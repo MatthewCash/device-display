@@ -54,16 +54,19 @@ export interface InternalDeviceUpdate {
     id: Device['id'];
     status: Device['status'];
 }
-interface Commands {
+interface OutboundCommands {
     deviceUpdateRequest?: DeviceUpdateRequest;
-    internalDeviceUpdate?: InternalDeviceUpdate;
+    setScene?: string | any;
+    reloadLightingEffects?: boolean;
+}
+
+interface InboundCommands {
     deviceUpdate?: DeviceUpdate;
     deviceList?: Device[];
-    setScene?: string | any;
 }
 
 interface InboundSocketMessage {
-    commands?: Commands;
+    commands?: InboundCommands;
     auth?: {
         authorization?: string;
     };
@@ -76,7 +79,7 @@ interface InboundSocketMessage {
 }
 
 interface OutboundSocketMessage {
-    commands?: Commands;
+    commands?: OutboundCommands;
     auth?: {
         authorization?: string;
     };
@@ -141,6 +144,6 @@ export const sendMessage = (data: OutboundSocketMessage) => {
     ws.send(JSON.stringify(data));
 };
 
-export const sendCommands = (commands: Commands) => {
+export const sendCommands = (commands: OutboundCommands) => {
     sendMessage({ commands });
 };

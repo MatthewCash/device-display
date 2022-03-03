@@ -1,5 +1,6 @@
 import { reactive } from 'vue';
 import { sendCommands } from '././devicesConnection';
+import { loadEffects } from './effects';
 
 export interface DeviceStatus {
     online: boolean; // Device is reachable
@@ -38,6 +39,12 @@ export const loadDevices = (loadDevices: Device[]) => {
 
     devices.length = 0;
     devices.push(...filteredDevices);
+
+    const lights = devices.find(device => device.id === 'lights');
+
+    if (lights) {
+        loadEffects(lights.status.state.effects)
+    }
 };
 
 export const updateDevice = (update: DeviceUpdate) => {
@@ -51,19 +58,20 @@ export const updateDevice = (update: DeviceUpdate) => {
     device.capabilities = update.capabilities ?? device.capabilities;
 };
 
-export const setDevice = (deviceId: string, requestedPowerState: boolean) => {
+export const updateDeviceState = (
+    deviceId: string,
+    requestedState: DeviceStatus['state']
+) => {
     const device = devices.find(device => device.id === deviceId);
     if (!device) return;
+
+    if (requestedState.power != null) device.loading = true;
 
     const deviceUpdateRequest: DeviceUpdateRequest = {
         name: device.name,
         id: deviceId,
-        requestedState: {
-            power: requestedPowerState
-        }
+        requestedState
     };
-
-    device.loading = true;
 
     sendCommands({ deviceUpdateRequest });
 };

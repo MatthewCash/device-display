@@ -9,7 +9,7 @@
             <div
                 class="brightness-indicator"
                 :style="{
-                    left: status.brightness + '%',
+                    left: currentBrightness + '%',
                     visibility: shouldHideIndicator ? 'hidden' : 'visible'
                 }"
             ></div>
@@ -19,23 +19,28 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
-import { sendMessage } from '../lightingConnection';
-import { status } from '../status';
+import { devices, updateDeviceState } from '../devices';
 
 export default defineComponent({
     name: 'BrightnessSlider',
     setup: () => {
         const shouldHideIndicator = computed(() => {
-            return status.power === false;
+            return (
+                devices.find(device => device.id === 'lights')?.status?.state
+                    ?.power === false
+            );
         });
 
-        return { status, shouldHideIndicator };
+        const currentBrightness = computed(() => {
+            return devices.find(device => device.id === 'lights')?.status?.state
+                ?.brightness;
+        });
+
+        return { status, shouldHideIndicator, currentBrightness };
     },
     methods: {
         setBrightness(brightness: number) {
-            sendMessage({
-                update: { brightness }
-            });
+            updateDeviceState('lights', { brightness });
         },
         onBrightnessUpdate(event: MouseEvent | TouchEvent) {
             let clientX = 0;

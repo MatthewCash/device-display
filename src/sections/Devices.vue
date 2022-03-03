@@ -10,10 +10,7 @@
                 <span class="scene-name">{{ name }}</span>
             </div>
         </div>
-        <h2 v-show="!connected" class="disconnected">
-            Disconnected from Device Controller
-        </h2>
-        <h3 v-show="connected && devices.length === 0">No Devices Detected</h3>
+        <h3 v-show="devices.length === 0">No Devices Detected</h3>
         <div class="devices">
             <div
                 class="device-container"
@@ -42,8 +39,8 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue';
-import { Device, devices, setDevice } from '../devices';
-import { connected, sendMessage } from '../devicesConnection';
+import { Device, devices, updateDeviceState } from '../devices';
+import { sendMessage } from '../devicesConnection';
 
 const scenes = {
     on: 'On',
@@ -59,11 +56,12 @@ export default defineComponent({
                 .sort((a, b) => a.name.localeCompare(b.name))
         );
 
-        return { devices: sortedDevices, connected, scenes };
+        return { devices: sortedDevices, scenes };
     },
     methods: {
         toggleDevice(device: Device) {
-            setDevice(device.id, !device?.status?.state?.power);
+            const currentPower = device?.status?.state?.power;
+            updateDeviceState(device.id, { power: !currentPower });
         },
         runScene(sceneId: string) {
             sendMessage({
@@ -145,10 +143,5 @@ export default defineComponent({
 .device-info {
     font-family: monospace;
     font-size: 1.3rem;
-}
-
-.disconnected {
-    color: red;
-    animation: pulse 2s infinite;
 }
 </style>

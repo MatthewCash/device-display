@@ -18,8 +18,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
-import { sendMessage } from '../lightingConnection';
-import { status } from '../status';
+import { devices, updateDeviceState } from '../devices';
 
 interface HueSaturation {
     hue: number;
@@ -30,13 +29,26 @@ export default defineComponent({
     name: 'ColorWheel',
     setup: () => {
         const colorX = computed(() => {
-            if (status.mode !== 'color') return;
+            if (
+                devices.find(device => device.id === 'lights')?.status?.state
+                    ?.mode !== 'color'
+            )
+                return;
             const saturation = Math.floor(
-                ((status.saturation ?? 0) / 100) ** 2 * 100
+                ((devices.find(device => device.id === 'lights')?.status?.state
+                    ?.saturation ?? 0) /
+                    100) **
+                    2 *
+                    100
             );
 
             const x =
-                (Math.sin(((status.hue ?? 0) / 180) * Math.PI) *
+                (Math.sin(
+                    ((devices.find(device => device.id === 'lights')?.status
+                        ?.state?.hue ?? 0) /
+                        180) *
+                        Math.PI
+                ) *
                     (saturation ?? 0) +
                     100) /
                 2;
@@ -45,21 +57,38 @@ export default defineComponent({
         });
 
         const colorY = computed(() => {
-            if (status.mode !== 'color') return;
+            if (
+                devices.find(device => device.id === 'lights')?.status?.state
+                    ?.mode !== 'color'
+            )
+                return;
             const saturation = Math.floor(
-                ((status.saturation ?? 0) / 100) ** 2 * 100
+                ((devices.find(device => device.id === 'lights')?.status?.state
+                    ?.saturation ?? 0) /
+                    100) **
+                    2 *
+                    100
             );
 
             const y =
                 50 -
-                (Math.cos(((status.hue ?? 0) / 180) * Math.PI) *
+                (Math.cos(
+                    ((devices.find(device => device.id === 'lights')?.status
+                        ?.state?.hue ?? 0) /
+                        180) *
+                        Math.PI
+                ) *
                     (saturation ?? 0)) /
                     2;
 
             return y;
         });
 
-        const shouldShowIndicator = computed(() => status.mode === 'color');
+        const shouldShowIndicator = computed(
+            () =>
+                devices.find(device => device.id === 'lights')?.status?.state
+                    ?.mode === 'color'
+        );
 
         return { colorX, colorY, shouldShowIndicator };
     },
@@ -115,9 +144,7 @@ export default defineComponent({
 
             const { hue, saturation } = this.getHueSaturation(height / 2, x, y);
 
-            sendMessage({
-                update: { hue, saturation }
-            });
+            updateDeviceState('lights', { hue, saturation });
         }
     }
 });
