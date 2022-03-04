@@ -15,12 +15,14 @@ let ws: WebSocket;
 
 const socketStatus = {
     readyState: ref(0),
-    authorized: false,
+    authorized: ref(false),
     alive: false
 };
 
 export const connected = computed(
-    () => socketStatus?.readyState?.value === WebSocket.OPEN
+    () =>
+        socketStatus.readyState.value === WebSocket.OPEN &&
+        socketStatus.authorized.value
 );
 const setReadyState = (readyState: number) =>
     (socketStatus.readyState.value = readyState);
@@ -101,8 +103,9 @@ const onMessage = (message: MessageEvent) => {
         sendMessage({ connection: { pong: true } });
     }
 
-    if (data?.state?.authorized !== null)
-        socketStatus.authorized = !!data?.state?.authorized;
+    if (data?.state?.authorized != null) {
+        socketStatus.authorized.value = data?.state?.authorized;
+    }
 
     if (data?.state?.authorized === false) {
         if (!devicesAuthToken)
