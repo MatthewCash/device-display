@@ -12,9 +12,15 @@
             >
                 <div
                     class="effect-status"
-                    :class="{ 'effect-enabled': effectIsEnabled(effect) }"
+                    :class="{
+                        'effect-enabled': enabledLightningEffect === effect.id
+                    }"
                 >
-                    {{ effectIsEnabled(effect) ? 'Enabled' : 'Disabled' }}
+                    {{
+                        enabledLightningEffect === effect.id
+                            ? 'Enabled'
+                            : 'Disabled'
+                    }}
                 </div>
                 <div class="effect-info">
                     <span class="effect-name">{{ effect.name }}</span>
@@ -25,31 +31,26 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { devices, updateDeviceState } from '../devices';
 import { LightingEffect, lightingEffects, reloadEffects } from '../effects';
 
 export default defineComponent({
     name: 'Effects',
     setup: () => {
-        return { lightingEffects, status };
+        const enabledLightningEffect = computed<string>(() => {
+            return devices.find(device => device.id === 'lights')?.status.state
+                .effectId;
+        });
+
+        return { lightingEffects, enabledLightningEffect, reloadEffects };
     },
     methods: {
-        effectIsEnabled(effect: LightingEffect) {
-            return (
-                devices.find(device => device.id === 'lights')?.status.state
-                    .effectId === effect.id
-            );
-        },
         toggleEffect(effect: LightingEffect) {
-            if (this.effectIsEnabled(effect)) {
-                updateDeviceState('lights', { effectId: null });
-            } else {
-                updateDeviceState('lights', { effectId: effect.id });
-            }
-        },
-        reloadEffects() {
-            reloadEffects();
+            updateDeviceState('lights', {
+                effectId:
+                    this.enabledLightningEffect === effect.id ? null : effect.id
+            });
         }
     }
 });
