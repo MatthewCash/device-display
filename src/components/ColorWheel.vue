@@ -144,7 +144,7 @@ export default defineComponent({
 
             const { hue, saturation } = this.getHueSaturation(height / 2, x, y);
 
-            updateDeviceState('lights', { hue, saturation });
+            updateDeviceState('lights', { hue, saturation, power: true });
         }
     }
 });

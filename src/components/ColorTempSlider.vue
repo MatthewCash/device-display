@@ -44,7 +44,7 @@ export default defineComponent({
     },
     methods: {
         setColorTemp(colorTemp: number) {
-            updateDeviceState('lights', { colorTemp });
+            updateDeviceState('lights', { colorTemp, power: true });
         },
         onColorTempUpdate(event: MouseEvent | TouchEvent) {
             let clientX = 0;

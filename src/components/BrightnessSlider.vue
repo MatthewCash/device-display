@@ -36,11 +36,11 @@ export default defineComponent({
                 ?.brightness;
         });
 
-        return { status, shouldHideIndicator, currentBrightness };
+        return { shouldHideIndicator, currentBrightness };
     },
     methods: {
         setBrightness(brightness: number) {
-            updateDeviceState('lights', { brightness });
+            updateDeviceState('lights', { brightness, power: true });
         },
         onBrightnessUpdate(event: MouseEvent | TouchEvent) {
             let clientX = 0;
