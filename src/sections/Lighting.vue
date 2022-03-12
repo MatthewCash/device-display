@@ -4,9 +4,9 @@
         <hr class="lighting-separator" />
         <ColorWheel />
         <div style="margin-top: 50px"></div>
-        <BrightnessSlider></BrightnessSlider>
-        <div style="margin-top: 80px"></div>
-        <ColorTempSlider></ColorTempSlider>
+        <BrightnessSlider class="slider"></BrightnessSlider>
+        <div style="margin-top: 20px"></div>
+        <ColorTempSlider class="slider"></ColorTempSlider>
     </div>
 </template>
 
@@ -32,7 +32,7 @@ export default defineComponent({
     flex-direction: column;
     align-items: center;
     text-align: center;
-    margin: 10px 20px;
+    width: 100%;
 }
 .lighting-title {
     font-family: monospace;
@@ -42,5 +42,8 @@ export default defineComponent({
 .lighting-separator {
     width: 80%;
     margin: 10px 0 30px;
+}
+.slider {
+    width: 100%;
 }
 </style>

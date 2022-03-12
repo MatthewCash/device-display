@@ -1,18 +1,20 @@
 <template>
     <div>
         <div
-            class="colortemp-slider"
+            class="colortemp-slider-hitbox"
             @click="onColorTempUpdate"
             @mousemove="onColorTempUpdate"
             @touchmove="onColorTempUpdate"
         >
-            <div
-                class="colortemp-indicator"
-                :style="{
-                    left: normalizedColorTemp + '%',
-                    visibility: shouldHideIndicator ? 'hidden' : 'visible'
-                }"
-            ></div>
+            <div class="colortemp-slider" ref="slider">
+                <div
+                    class="colortemp-indicator"
+                    :style="{
+                        left: normalizedColorTemp + '%',
+                        visibility: shouldHideIndicator ? 'hidden' : 'visible'
+                    }"
+                ></div>
+            </div>
         </div>
     </div>
 </template>
@@ -68,12 +70,8 @@ export default defineComponent({
             if (!clientX) return;
 
             const targetDims = (
-                event.currentTarget as HTMLElement
+                this.$refs.slider as HTMLElement
             ).getBoundingClientRect();
-
-            const x = -clientX + targetDims.x + targetDims.width / 2;
-
-            if (Math.abs(x) > targetDims.width / 2) return;
 
             const colorTemp = Math.round(
                 ((clientX - targetDims.x) / targetDims.width) * 6500 + 2500
@@ -86,6 +84,13 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.colortemp-slider-hitbox {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .colortemp-slider {
     width: 300px;
     height: 20px;

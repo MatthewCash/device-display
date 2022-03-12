@@ -1,18 +1,20 @@
 <template>
     <div>
         <div
-            class="brightness-slider"
+            class="brightness-slider-hitbox"
             @click="onBrightnessUpdate"
             @mousemove="onBrightnessUpdate"
             @touchmove="onBrightnessUpdate"
         >
-            <div
-                class="brightness-indicator"
-                :style="{
-                    left: currentBrightness + '%',
-                    visibility: shouldHideIndicator ? 'hidden' : 'visible'
-                }"
-            ></div>
+            <div class="brightness-slider" ref="slider">
+                <div
+                    class="brightness-indicator"
+                    :style="{
+                        left: currentBrightness + '%',
+                        visibility: shouldHideIndicator ? 'hidden' : 'visible'
+                    }"
+                ></div>
+            </div>
         </div>
     </div>
 </template>
@@ -64,12 +66,8 @@ export default defineComponent({
             if (!clientX) return;
 
             const targetDims = (
-                event.currentTarget as HTMLElement
+                this.$refs.slider as HTMLElement
             ).getBoundingClientRect();
-
-            const x = -clientX + targetDims.x + targetDims.width / 2;
-
-            if (Math.abs(x) > targetDims.width / 2) return;
 
             const brightness = Math.round(
                 ((clientX - targetDims.x) / targetDims.width) * 100
@@ -82,6 +80,13 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.brightness-slider-hitbox {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .brightness-slider {
     width: 300px;
     height: 20px;
