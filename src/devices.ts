@@ -43,7 +43,7 @@ export const loadDevices = (loadDevices: Device[]) => {
     const lights = devices.find(device => device.id === 'lights');
 
     if (lights) {
-        loadEffects(lights.status.state.effects)
+        loadEffects(lights.status.state.effects);
     }
 };
 
@@ -65,7 +65,11 @@ export const updateDeviceState = (
     const device = devices.find(device => device.id === deviceId);
     if (!device) return;
 
-    if (requestedState.power != null) device.loading = true;
+    if (
+        Object.keys(requestedState).length === 1 &&
+        requestedState.power != null
+    )
+        device.loading = true;
 
     const deviceUpdateRequest: DeviceUpdateRequest = {
         name: device.name,
