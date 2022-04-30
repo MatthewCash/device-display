@@ -56,7 +56,13 @@ export const updateDevice = (update: DeviceUpdate) => {
     device.name = update.name;
     device.tags = update.tags ?? device.tags;
     device.capabilities = update.capabilities ?? device.capabilities;
-};
+
+    const lights = devices.find(device => device.id === 'lights');
+
+    if (lights) {
+        loadEffects(lights.status.state.effects);
+    }
+}
 
 export const updateDeviceState = (
     deviceId: string,
