@@ -18,6 +18,7 @@ export default defineComponent({
 html {
     font-size: 20px;
     overflow: hidden;
+    cursor: none;
 }
 body {
     margin: 0;
