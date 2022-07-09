@@ -28,11 +28,12 @@ export interface DeviceUpdateRequest {
     id: Device['id'];
     requestedState: DeviceStatus['state'];
 }
+const params = new URLSearchParams(window.location.search);
 
 export const devices: Device[] = reactive([]);
 
 export const loadDevices = (loadDevices: Device[]) => {
-    const deviceFilterTag = import.meta.env.VITE_DEVICE_FILTER_TAG as string;
+    const deviceFilterTag = params.get('device-filter-tag');
     const filteredDevices = deviceFilterTag
         ? loadDevices.filter(device => device.tags?.includes(deviceFilterTag))
         : loadDevices;

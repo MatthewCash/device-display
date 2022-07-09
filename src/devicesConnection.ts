@@ -7,9 +7,14 @@ import {
     Device
 } from './devices';
 
-const deviceWsUrl =
-    String(import.meta.env.VITE_DEVICES_WS_URL) || 'ws://epsilon.zero:3001';
-const devicesAuthToken = String(import.meta.env.VITE_DEVICES_AUTHORIZATION);
+const params = new URLSearchParams(window.location.search);
+
+const deviceWsUrl = params.get('devices-ws-usl') || 'ws://epsilon.zero:3001';
+const devicesAuthToken = params.get('devices-auth-token');
+
+if (!devicesAuthToken) {
+    console.error('No auth token provided!');
+}
 
 let ws: WebSocket;
 
@@ -111,7 +116,7 @@ const onMessage = (message: MessageEvent) => {
         if (!devicesAuthToken)
             console.error('No devices authorization token provided!');
 
-        sendMessage({ auth: { authorization: devicesAuthToken } });
+        sendMessage({ auth: { authorization: devicesAuthToken! } });
     }
 
     const deviceList = data?.commands?.deviceList;
