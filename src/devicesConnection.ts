@@ -30,7 +30,7 @@ const setReadyState = (readyState: number) =>
 const connect = () => {
     console.log('Devices Connecting to WS Server...');
 
-    if (ws) ws.close();
+    if (ws?.readyState === WebSocket.OPEN) ws.close();
 
     try {
         ws = new WebSocket(deviceWsUrl);
