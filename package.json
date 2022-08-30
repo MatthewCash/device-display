@@ -16,6 +16,6 @@
         "@vuedx/typescript-plugin-vue": "^0.7.5",
         "sass": "^1.51.0",
         "typescript": "^4.6.4",
-        "vite": "^2.9.8"
+        "vite": "^2.9.13"
     }
 }
