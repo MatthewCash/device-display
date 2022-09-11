@@ -5,6 +5,7 @@
             @click="onSliderAdjust"
             @mousemove="onSliderAdjust"
             @touchmove="onSliderAdjust"
+            @touch="onSliderAdjust"
         >
             <div
                 class="slider"
@@ -64,6 +65,11 @@ export default defineComponent({
             }
 
             if (event.type === 'touchmove') {
+                event = event as TouchEvent;
+                clientX = event.targetTouches[0].clientX;
+            }
+
+            if (event.type === 'touch') {
                 event = event as TouchEvent;
                 clientX = event.targetTouches[0].clientX;
             }
