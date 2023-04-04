@@ -8,7 +8,8 @@
                 class="effect-container"
                 v-for="effect of lightingEffects"
                 :key="effect.id"
-                @click="toggleEffect(effect)"
+                @click.prevent="toggleEffect(effect)"
+                @touchstart.prevent="toggleEffect(effect)"
             >
                 <div
                     class="effect-status"

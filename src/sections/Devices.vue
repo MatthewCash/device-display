@@ -5,7 +5,8 @@
                 class="scene"
                 v-for="(name, id) of scenes"
                 :key="id"
-                @click="runScene(id)"
+                @click.prevent="runScene(id)"
+                @touchstart.prevent="runScene(id)"
             >
                 <span class="scene-name">{{ name }}</span>
             </div>
@@ -16,7 +17,8 @@
                 class="device-container"
                 v-for="device of devices"
                 :key="device.id"
-                @click="toggleDevice(device)"
+                @click.prevent="toggleDevice(device)"
+                @touchstart.prevent="toggleDevice(device)"
             >
                 <div
                     class="device-status"
