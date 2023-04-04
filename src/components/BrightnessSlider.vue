@@ -37,7 +37,6 @@ export default defineComponent({
     },
     methods: {
         setBrightness(brightness: number) {
-            console.log('setBrightness', brightness);
             updateDeviceState('lights', { brightness, power: true });
         }
     }
