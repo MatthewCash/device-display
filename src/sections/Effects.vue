@@ -64,7 +64,7 @@ export default defineComponent({
     flex-direction: column;
     align-items: center;
     text-align: center;
-    margin: 10px 20px;
+    margin: 0 20px 10px 20px;
 }
 .effects-title {
     font-family: monospace;
