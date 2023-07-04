@@ -32,10 +32,8 @@ body {
     transition: all 0.3s;
 }
 #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #ffffff;
+    font-family: sans-serif;
+    color: white;
     background-color: black;
     width: 100vw;
     height: 100vh;
