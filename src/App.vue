@@ -19,6 +19,7 @@ html {
     font-size: 20px;
     overflow: hidden;
     cursor: none;
+    touch-action: none;
 }
 body {
     margin: 0;
