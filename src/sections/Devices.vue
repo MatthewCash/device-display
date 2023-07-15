@@ -17,6 +17,7 @@
                 class="device-container"
                 v-for="device of devices"
                 :key="device.id"
+                :class="{ offline: !device.status.online }"
                 @click.prevent="toggleDevice(device)"
                 @touchstart.prevent="toggleDevice(device)"
             >
@@ -28,7 +29,7 @@
                         <div class="spinner"></div>
                     </div>
                     <span v-show="!device.loading">{{
-                        device?.status?.state?.power ? 'On' : 'Off'
+                        textState(device?.status)
                     }}</span>
                 </div>
                 <div class="device-info">
@@ -41,7 +42,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue';
-import { Device, devices, updateDeviceState } from '../devices';
+import { Device, devices, DeviceStatus, updateDeviceState } from '../devices';
 import { sendMessage } from '../devicesConnection';
 
 const scenes = {
@@ -71,6 +72,9 @@ export default defineComponent({
                     setScene: sceneId
                 }
             });
+        },
+        textState(status: DeviceStatus) {
+            return !status?.online ? '?' : status?.state?.power ? 'On' : 'Off';
         }
     }
 });
@@ -133,7 +137,6 @@ export default defineComponent({
     border-radius: 6px 0px 0px 6px;
     font-size: 1.2rem;
 }
-
 .device-enabled {
     background-color: rgb(150, 150, 150);
 }
@@ -145,5 +148,8 @@ export default defineComponent({
 .device-info {
     font-family: monospace;
     font-size: 1.3rem;
+}
+.offline {
+    opacity: 0.4;
 }
 </style>
